@@ -6,5 +6,6 @@ RSpec.describe "GET /api/v1/reservations/", type: :request  do
     #get api_v1_reservations_path
     subject
     expect(response).to have_http_status(:success)
+    expect(subject).to eq(200)
   end
 end

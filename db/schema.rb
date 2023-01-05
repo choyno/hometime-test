@@ -10,8 +10,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 0) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_05_091802) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "guests", force: :cascade do |t|
+    t.string "email"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phone_numbers", default: [], array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_guests_on_email", unique: true
+  end
+
+  create_table "reservations", force: :cascade do |t|
+    t.bigint "guest_id"
+    t.string "reservation_code", limit: 11, null: false
+    t.date "start_date"
+    t.date "end_date"
+    t.integer "nights"
+    t.integer "guests"
+    t.integer "adults"
+    t.integer "children"
+    t.integer "infants"
+    t.string "status"
+    t.string "currency"
+    t.decimal "payout_price"
+    t.decimal "security_price"
+    t.decimal "total_price"
+    t.text "localized_description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["guest_id"], name: "index_reservations_on_guest_id"
+    t.index ["reservation_code"], name: "index_reservations_on_reservation_code", unique: true
+  end
+
+  add_foreign_key "reservations", "guests"
 end

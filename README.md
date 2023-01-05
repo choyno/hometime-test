@@ -1,24 +1,14 @@
-# README
+## Version Ruby
+Ruby 3.1.3
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## running Dv
+rails db:setup
+rails db:migrate
+rails db:test:prepare
 
-Things you may want to cover:
+## running SERVER
+rails s
 
-* Ruby version
+## running RSPEC
+rspec --format documentation spec
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
