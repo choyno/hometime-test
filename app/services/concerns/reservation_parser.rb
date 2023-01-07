@@ -12,11 +12,13 @@ class ReservationParser
     elsif payload.key?(:code)
       payload.fetch(:code)
     else
-      raise_invalid_resercation_code
+      nil
     end
   end
 
   def call
+
+    raise_invalid_reservation_code if reservation_code.nil?
 
     if reservation_code.include?("YYY") #payload 1
       {
