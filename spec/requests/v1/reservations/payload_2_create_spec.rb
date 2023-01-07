@@ -36,10 +36,9 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
     }
   end
 
-  context 'Create Reservation for Payload 1' do
+  context 'Create Reservation for Payload 2' do
     it 'successfully created' do
-      #subject
-      post api_v1_reservations_path params: params
+      subject
       expect(Guest.all.count).to eq(1)
       expect(response).to have_http_status(:created)
     end

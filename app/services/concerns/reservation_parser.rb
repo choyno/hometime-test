@@ -12,7 +12,7 @@ class ReservationParser
     elsif payload.key?(:code)
       payload.fetch(:code)
     else
-      raise ResponseError::InvalidReservationCode,"Reservation Code Not Recognize"
+      raise_invalid_resercation_code
     end
   end
 
@@ -64,7 +64,11 @@ class ReservationParser
         }]
       }
     else
-      raise ResponseError::InvalidReservationCode, "Reservation Code Not Recognize"
+      raise_invalid_resercation_code
     end
+  end
+
+  def raise_invalid_resercation_code
+    raise ResponseError::InvalidReservationCode, "Reservation Code Not Recognize"
   end
 end

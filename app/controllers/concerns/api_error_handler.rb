@@ -4,6 +4,7 @@ module ApiErrorHandler
   extend ActiveSupport::Concern
 
   included do
+
     rescue_from ActiveRecord::RecordNotUnique do |e|
       json_response({ message: e.message }, :conflict)
     end
@@ -18,6 +19,10 @@ module ApiErrorHandler
 
     rescue_from ResponseError::InvalidReservationCode do |e|
       json_response({ message: e.message }, :unprocessable_entity)
+    end
+
+    rescue_from PG::UniqueViolation do |e|
+      json_response({ message: e.message }, :conflict)
     end
   end
 end
