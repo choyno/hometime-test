@@ -1,7 +1,22 @@
 class ReservationParser
 
-  def self.call(payload)
-    if payload.key?(:reservation_code)
+  class InvalidReservationCode < StandardError; end
+
+  attr_accessor :payload
+
+  def initialize(payload)
+    @payload = payload
+  end
+
+  def reservation_code
+    payload.fetch(:reservation_code) || payload.fetch(:reservation, {}).fetch(:code)
+  end
+
+  def call
+
+    raise InvalidReservationCode if reservation_code.nil?
+
+    if reservation_code.include?("YYY") #payload 1
       {
         first_name: payload[:guest][:first_name],
         last_name: payload[:guest][:last_name],
@@ -23,7 +38,7 @@ class ReservationParser
           total_price: payload[:total_price]
         }]
       }
-    else
+    elsif reservation_code.include?("XXX") #payload 2
       {
         first_name: payload[:reservation][:guest_first_name],
         last_name: payload[:reservation][:guest_last_name],
@@ -45,6 +60,8 @@ class ReservationParser
           total_price: payload[:reservation][:total_paid_amount_accurate]
         }]
       }
+    else
+      raise InvalidReservationCode
     end
   end
 end

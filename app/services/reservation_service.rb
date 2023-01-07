@@ -8,7 +8,7 @@ class ReservationService
   end
 
   def reservation_params
-    ReservationParser.call(payload)
+    ReservationParser.new(payload).call
   end
 
   def call
