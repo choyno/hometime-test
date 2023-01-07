@@ -33,7 +33,6 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
   context 'Create Reservation for Payload 1' do
     it 'successfully created' do
       subject
-      #post api_v1_reservations_path params: params
       expect(Guest.all.count).to eq(1)
       expect(response).to have_http_status(:created)
     end
@@ -42,12 +41,11 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
   context 'Invalid Payload ' do
 
     let!(:reservation_code) do
-      "INVALI123123123"
+      "INVALID123123123"
     end
 
     it 'Raise Invalid reservation code' do
       subject
-      #post api_v1_reservations_path params: params
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.body).to be_json_as({ message: 'Reservation Code Not Recognize' })
     end
