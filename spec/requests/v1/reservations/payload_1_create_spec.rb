@@ -40,6 +40,7 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
     end
   end
 
+
   context 'Invalid Payload ' do
 
     let!(:reservation_code) do
@@ -52,4 +53,5 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
       expect(response.body).to be_json_as({ message: 'Reservation Code Not Recognize' })
     end
   end
+
 end

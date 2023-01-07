@@ -6,7 +6,11 @@ class Api::V1::ReservationsController < Api::V1::BaseApiController
 
   def create
     reservation = ReservationService.new(reservation_params).call
-    json_response({ save: { message: 'Reservation save'} }, :created )
+    if reservation.errors.present?
+      json_response({ error: { message: reservation.errors } }, :unprocessable_entity )
+    else
+      json_response({ save: { message: 'Reservation save'} }, :created )
+    end
   end
 
   private
@@ -29,6 +33,7 @@ class Api::V1::ReservationsController < Api::V1::BaseApiController
       :payout_price,
       :security_price,
       :total_price,
+      :guests,
       guest: [
         :first_name,
         :last_name,

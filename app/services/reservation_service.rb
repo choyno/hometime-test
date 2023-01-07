@@ -15,19 +15,16 @@ class ReservationService
     ReservationParser.new(payload).reservation_code
   end
 
-  def call
-    reserved
-  end
-
- def guest
-  guest = Guest.find_or_create_by(email: reservation_params[:email])
-  guest.update(reservation_params.except(:reservations_attributes))
-  guest
- end
-
- def reserved
-   reservation = guest.reservations.find_or_create_by(reservation_code: reservation_code)
-   reservation.update(reservation_params[:reservations_attributes][0])
+ #def call
+ #  guest = Guest.find_or_create_by(email: reservation_params[:email])
+ #  guest.update(reservation_params)
+ #  return guest
+ #end
+  
+ def call
+   guest = Reservation.find_or_create_by(reservation_code: reservation_code)
+   guest.update(reservation_params)
+   return guest
  end
 
   private
