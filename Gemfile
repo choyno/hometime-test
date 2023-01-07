@@ -25,3 +25,4 @@ end
 gem 'rspec-request_describer'
 gem "rails_best_practices"
 gem 'syntax_suggest'
+gem 'rspec-json_matcher'

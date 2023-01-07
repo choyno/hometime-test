@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "POST api/v1/reservations/", type: :request  do
+RSpec.describe "POST /api/v1/reservations/", type: :request  do
 
   let!(:reservation_code) do
     "YYY12345678"
@@ -32,8 +32,8 @@ RSpec.describe "POST api/v1/reservations/", type: :request  do
 
   context 'Create Reservation for Payload 1' do
     it 'successfully created' do
-      #subject
-      post api_v1_reservations_path params: params
+      subject
+      #post api_v1_reservations_path params: params
       expect(Guest.all.count).to eq(1)
       expect(response).to have_http_status(:created)
     end
@@ -46,8 +46,10 @@ RSpec.describe "POST api/v1/reservations/", type: :request  do
     end
 
     it 'Raise Invalid reservation code' do
-      post api_v1_reservations_path params: params
+      subject
+      #post api_v1_reservations_path params: params
       expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.body).to be_json_as({ message: 'Reservation Code Not Recognize' })
     end
   end
 end
