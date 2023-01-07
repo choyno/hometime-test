@@ -2,9 +2,13 @@ require 'rails_helper'
 
 RSpec.describe "POST api/v1/reservations/", type: :request  do
 
+  let!(:reservation_code) do
+    "YYY12345678"
+  end
+
   let!(:params) do
     {
-      reservation_code: "YYY12345678",
+      reservation_code: reservation_code,
       start_date: "2021-04-14",
       end_date: "2021-04-18",
       nights: 4,
@@ -32,6 +36,18 @@ RSpec.describe "POST api/v1/reservations/", type: :request  do
       post api_v1_reservations_path params: params
       expect(Guest.all.count).to eq(1)
       expect(response).to have_http_status(:created)
+    end
+  end
+
+  context 'Invalid Payload ' do
+
+    let!(:reservation_code) do
+      "INVALI123123123"
+    end
+
+    it 'Raise Invalid reservation code' do
+      post api_v1_reservations_path params: params
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 end

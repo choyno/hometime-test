@@ -1,7 +1,5 @@
 class ReservationParser
 
-  class InvalidReservationCode < StandardError; end
-
   attr_accessor :payload
 
   def initialize(payload)
@@ -14,7 +12,7 @@ class ReservationParser
 
   def call
 
-    raise InvalidReservationCode if reservation_code.nil?
+    raise ResponseError::InvalidReservationCode if reservation_code.nil?
 
     if reservation_code.include?("YYY") #payload 1
       {
@@ -61,7 +59,7 @@ class ReservationParser
         }]
       }
     else
-      raise InvalidReservationCode
+      raise ResponseError::InvalidReservationCode, "Reservation Code Not Recognize"
     end
   end
 end

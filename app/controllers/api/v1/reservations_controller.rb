@@ -1,14 +1,13 @@
 class Api::V1::ReservationsController < Api::V1::BaseApiController
 
   def index
-    json_response({ save: { message: 'index'} }, :ok )
+    raise ResponseError::InvalidReservationCode, "Reservation Code Not Recognize"
   end
 
   def create
     reservation = ReservationService.new(reservation_params).call
     json_response({ save: { message: 'save'} }, :created )
-  rescue StandardError => e
-    json_response({ error: { message: 'Unable to save reservation.', description: e.message } }, :bad_request)
+    #json_response({ error: { message: 'Unable to save reservation.', description: e.message } }, :bad_request) unless reservation
   end
 
   private
