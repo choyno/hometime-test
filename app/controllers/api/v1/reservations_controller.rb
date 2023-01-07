@@ -1,8 +1,12 @@
 class Api::V1::ReservationsController < Api::V1::BaseApiController
 
+  def index
+    json_response({ save: { message: 'index'} }, :ok )
+  end
+
   def create
     reservation = ReservationService.new(reservation_params).call
-    json_response({ save: { message: 'save'} }, :create )
+    json_response({ save: { message: 'save'} }, :created )
   rescue StandardError => e
     json_response({ error: { message: 'Unable to save reservation.', description: e.message } }, :bad_request)
   end
@@ -10,7 +14,7 @@ class Api::V1::ReservationsController < Api::V1::BaseApiController
   private
 
   def reservation_params
-    params.fetch(:reservation, {}).has_key?(:guest_details) ? permit_reservation_second_payload : permit_reservation_first_payload
+    params.fetch(:reservation, {}).has_key?(:guest_details) ? permit_reservation_second_payload.to_h : permit_reservation_first_payload.to_h
   end
 
   def permit_reservation_first_payload

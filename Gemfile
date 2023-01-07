@@ -23,5 +23,5 @@ group :development do
 end
 
 gem 'rspec-request_describer'
-
 gem "rails_best_practices"
+gem 'syntax_suggest'

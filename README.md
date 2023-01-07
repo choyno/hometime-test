@@ -12,3 +12,5 @@ rails s
 ## running RSPEC
 rspec --format documentation spec
 
+## runnig rails best practices
+bundle exec rails_best_practices .
