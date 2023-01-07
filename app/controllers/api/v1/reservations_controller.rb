@@ -6,7 +6,7 @@ class Api::V1::ReservationsController < Api::V1::BaseApiController
 
   def create
     reservation = ReservationService.new(reservation_params).call
-    json_response({ save: { message: 'save'} }, :created )
+    json_response({ save: { message: 'Reservation save'} }, :created )
   end
 
   private

@@ -36,6 +36,7 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
       expect(Guest.all.count).to eq(1)
       expect(Reservation.all.count).to eq(1)
       expect(response).to have_http_status(:created)
+      expect(response.body).to be_json_as({ save: {message: 'Reservation save'} })
     end
   end
 
