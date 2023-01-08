@@ -181,7 +181,6 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
     end
   end
 
-
   context 'Validated Reservation Validation' do
 
     let!(:params) do
@@ -228,7 +227,7 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
             ],
             end_date: [
               "can't be blank",
-               "Must be after or equal to start date"
+              "Must be after or equal to start date"
             ],
             nights: [
               "can't be blank"
@@ -267,18 +266,18 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
         }
       })
     end
+  end
 
-    context 'Invalid Payload ' do
+  context 'Invalid Payload ' do
 
-      let!(:reservation_code) do
-        "INVALID123123123"
-      end
+    let!(:reservation_code) do
+      "INVALID123123123"
+    end
 
-      it 'Raise Invalid reservation code' do
-        subject
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.body).to be_json_as({ message: 'Reservation Code Not Recognize' })
-      end
+    it 'Raise Invalid reservation code' do
+      subject
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.body).to be_json_as({ message: 'Reservation Code Not Recognize' })
     end
   end
 end
