@@ -73,6 +73,7 @@ RSpec.describe "PUT /api/v1/reservations/", type: :request  do
       expect(reservation.currency).to eq(params[:currency])
       expect(reservation.payout_price.to_f).to eq(params[:payout_price].to_f)
       expect(reservation.security_price.to_f).to eq(params[:security_price].to_f)
+      expect(response).to have_http_status(:ok)
       expect(response.body).to be_json_as({ save: {message: 'Reservation updated'} })
     end
   end
