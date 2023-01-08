@@ -8,6 +8,14 @@ class ReservationService
   end
 
   def reservation_params
+    reservation_parser.except(:guest_attributes)
+  end
+
+  def guest_params
+    reservation_parser[:guest_attributes]
+  end
+
+  def reservation_parser
     ReservationParser.new(payload).call
   end
 
@@ -16,8 +24,15 @@ class ReservationService
   end
 
   def save_record
-    guest = Reservation.create(reservation_code: reservation_code)
-    guest.update(reservation_params)
-    return guest
+    reservation = Reservation.create(reservation_code: reservation_code)
+    reservation.update(reservation_parser)
+    return reservation
+  end
+
+  def update_record
+    reservation = Reservation.find_or_initialize_by(reservation_code: reservation_code)
+    reservation.update(reservation_params)
+    guest = reservation.guest.update(guest_params)
+    return reservation
   end
 end
