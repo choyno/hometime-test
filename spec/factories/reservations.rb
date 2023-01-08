@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :reservation do
     guest { create(:guest) }
-    sequence(:reservation_code) { |n| "YYY123456#{n}" }
+    sequence(:reservation_code) { |n| "YYY1234123#{n}" }
     start_date { Time.zone.now }
     end_date { Time.zone.now + 2.day }
     nights { Faker::Number.digit }

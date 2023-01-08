@@ -1,7 +1,7 @@
 class Api::V1::ReservationsController < Api::V1::BaseApiController
 
   def create
-    reservation = ReservationService.new(reservation_params).call
+    reservation = ReservationService.new(reservation_params).save_record
     if reservation.errors.present?
       json_response({ error: { message: reservation.errors } }, :unprocessable_entity )
     else
