@@ -151,6 +151,85 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
     end
   end
 
+  context 'Validated Reservation Validation' do
+
+    let!(:params) do
+      {
+        reservation_code: reservation_code,
+        start_date: "",
+        end_date: "",
+        nights: nil,
+        guests: nil,
+        adults: nil,
+        children: nil,
+        infants: nil,
+        status: ,
+        guest: {
+          first_name: "Wayne",
+          last_name: "Woodbridge",
+          phone: "639123456789",
+          email: nil
+        },
+        currency: nil,
+        payout_price: nil,
+        security_price: nil,
+        total_price: nil
+      }
+    end
+
+    it 'show validation required fields' do
+      subject
+      expect(Guest.all.count).to eq(0)
+      expect(Reservation.all.count).to eq(0)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.body).to be_json_as({
+        error: {
+          message: {
+            start_date: [
+                "can't be blank"
+             ],
+             end_date: [
+               "can't be blank"
+             ],
+             nights: [
+               "can't be blank"
+             ],
+             "guests": [
+               "can't be blank"
+             ],
+             "adults": [
+               "can't be blank"
+             ],
+             "children": [
+               "can't be blank"
+             ],
+             "infants": [
+               "can't be blank"
+             ],
+             "status": [
+               "can't be blank"
+             ],
+             "currency": [
+               "can't be blank"
+             ],
+             "payout_price": [
+               "can't be blank"
+             ],
+             "security_price": [
+               "can't be blank"
+             ],
+             "total_price": [
+               "can't be blank"
+             ],
+             "guest.email": [
+               "can't be blank"
+             ]
+          }
+        }
+      })
+    end
+  end
+
   context 'Invalid Payload ' do
 
     let!(:reservation_code) do

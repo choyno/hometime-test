@@ -79,16 +79,180 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
     end
   end
 
-  context 'Invalid Payload ' do
+  context 'Validated Guest Exist' do
 
-    let!(:reservation_code) do
-      "INVALID123123123"
+    let(:guest) { create(:guest, email: params[:reservation][:guest_email]) }
+
+    before do
+      create(:reservation, guest: guest)
     end
 
-    it 'Raise Invalid reservation code' do
-      subject
+    it 'validation Email already exist' do
+      post '/api/v1/reservations', params: params 
+      expect(Guest.all.count).to eq(1)
+      expect(Reservation.all.count).to eq(1)
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(response.body).to be_json_as({ message: 'Reservation Code Not Recognize' })
+      expect(response.body).to be_json_as({
+        error: {
+          message: {
+            "guest.email": [
+              "Email Already Exist"
+            ]
+          }
+        }
+      })
+    end
+  end
+
+  context 'Validated Reservation Exist' do
+
+    let!(:email) { "another@email.com"  }
+
+    before do
+      create(:reservation, reservation_code: reservation_code)
+    end
+
+    it 'validation Email already exist' do
+      subject
+      expect(Guest.all.count).to eq(1)
+      expect(Reservation.all.count).to eq(1)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.body).to be_json_as({
+        error: {
+          message: {
+            reservation_code: [
+              "Reservation is Already Exist"
+            ],
+          }
+        }
+      })
+    end
+  end
+
+  context 'Validated Reservation Exist and Email Exist' do
+
+    let(:email) { "another@email.com"  }
+    let(:guest) { create(:guest, email: email) }
+
+    before do
+      create(:reservation, reservation_code: reservation_code, guest: guest)
+    end
+
+    it 'validation Reservation and Email already exist' do
+      subject
+      expect(Guest.all.count).to eq(1)
+      expect(Reservation.all.count).to eq(1)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.body).to be_json_as({
+        error: {
+          message: {
+            reservation_code: [
+              "Reservation is Already Exist"
+            ],
+            "guest.email": [
+              "Email Already Exist"
+            ]
+          }
+        }
+      })
+    end
+  end
+
+  context 'Validated Reservation Validation' do
+
+    let!(:params) do
+      {
+        reservation: {
+          code: reservation_code,
+          start_date: nil,
+          end_date: nil,
+          expected_payout_amount: nil,
+          guest_details: {
+            localized_description: "4 guests",
+            number_of_adults: nil,
+            number_of_children: nil,
+            number_of_infants: nil
+          },
+          guest_email: nil,
+          guest_first_name: "Wayne",
+          guest_last_name: "Woodbridge",
+          guest_phone_numbers: [
+            "639123456789",
+            "639123456789"
+          ],
+          listing_security_price_accurate: nil,
+          host_currency: nil,
+          nights: nil,
+          number_of_guests: nil,
+          status_type: nil,
+          total_paid_amount_accurate: nil
+        }
+      }
+    end
+
+    it 'show validation required fields' do
+      subject
+      expect(Guest.all.count).to eq(0)
+      expect(Reservation.all.count).to eq(0)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.body).to be_json_as({
+        error: {
+          message: {
+            start_date: [
+              "can't be blank"
+            ],
+            end_date: [
+              "can't be blank"
+            ],
+            nights: [
+              "can't be blank"
+            ],
+            "guests": [
+              "can't be blank"
+            ],
+            "adults": [
+              "can't be blank"
+            ],
+            "children": [
+              "can't be blank"
+            ],
+            "infants": [
+              "can't be blank"
+            ],
+            "status": [
+              "can't be blank"
+            ],
+            "currency": [
+              "can't be blank"
+            ],
+            "payout_price": [
+              "can't be blank"
+            ],
+            "security_price": [
+              "can't be blank"
+            ],
+            "total_price": [
+              "can't be blank"
+            ],
+            "guest.email": [
+              "can't be blank"
+            ]
+          }
+        }
+      })
+    end
+
+    context 'Invalid Payload ' do
+
+      let!(:reservation_code) do
+        "INVALID123123123"
+      end
+
+      it 'Raise Invalid reservation code' do
+        subject
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.body).to be_json_as({ message: 'Reservation Code Not Recognize' })
+      end
     end
   end
 end
