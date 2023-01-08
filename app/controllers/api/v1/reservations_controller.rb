@@ -11,7 +11,7 @@ class Api::V1::ReservationsController < Api::V1::BaseApiController
 
   def update
     reservation = ReservationService.new(reservation_params).update_record
-    if reservation.errors.present? || reservation.guest.errors.present?
+    if reservation.has_errors?
       errors = {reservation: reservation.errors.messages, guest: reservation.guest.errors.messages }
       json_response({ error: { message: errors } }, :unprocessable_entity )
     else
