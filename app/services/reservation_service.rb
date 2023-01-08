@@ -30,7 +30,7 @@ class ReservationService
   end
 
   def update_record
-    reservation = Reservation.find_or_initialize_by(reservation_code: reservation_code)
+    reservation = Reservation.find_by(reservation_code: reservation_code)
     reservation.update(reservation_params)
     guest = reservation.guest.update(guest_params)
     return reservation
