@@ -17,5 +17,7 @@ module ReservationValidation
     validates :payout_price, presence: true
     validates :security_price, presence: true
     validates :total_price , presence: true
+    validates :start_date, date: { before_or_equal_to: :end_date, message: "Must be before or equal to end date" }
+    validates :end_date, date: { after_or_equal_to: :start_date, message: "Must be after or equal to start date" }
   end
 end

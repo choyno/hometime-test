@@ -13,6 +13,10 @@ group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
   gem "rspec-rails"
   gem "factory_bot_rails"
+
+  gem 'rspec-request_describer'
+  gem 'rspec-json_matcher'
+  gem "rails_best_practices"
 end
 
 group :test do
@@ -20,9 +24,7 @@ group :test do
 end
 
 group :development do
+  gem 'syntax_suggest'
 end
 
-gem 'rspec-request_describer'
-gem "rails_best_practices"
-gem 'syntax_suggest'
-gem 'rspec-json_matcher'
+gem 'date_validator'

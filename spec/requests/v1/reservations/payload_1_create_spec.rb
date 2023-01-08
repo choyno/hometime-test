@@ -186,10 +186,12 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
         error: {
           message: {
             start_date: [
-                "can't be blank"
+                "can't be blank",
+                "Must be before or equal to end date"
              ],
              end_date: [
-               "can't be blank"
+               "can't be blank",
+               "Must be after or equal to start date"
              ],
              nights: [
                "can't be blank"
