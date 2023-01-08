@@ -13,23 +13,6 @@ RSpec.describe "PUT /api/v1/reservations/", type: :request  do
     "wayne_woodbridge@bnb.com"
   end
 
-  let!(:reservation_params) do
-    {
-      reservation_code: reservation_code,
-      start_date: "2021-04-14",
-      end_date: "2021-04-18",
-      nights: 4,
-      guests: 4,
-      adults: 2,
-      children: 2,
-      infants: 0,
-      status: "accepted",
-      currency: "AUD",
-      payout_price: "4200.00",
-      security_price: "500",
-      total_price: "4700.00"
-    }
-  end
 
   let!(:guest_params) do
     {
@@ -45,8 +28,8 @@ RSpec.describe "PUT /api/v1/reservations/", type: :request  do
   let!(:params) do
     {
       reservation_code: reservation_code,
-      start_date: "2021-04-1",
-      end_date: "2021-04-5",
+      start_date: "2021-04-01",
+      end_date: "2021-04-05",
       nights: 1,
       guests: 1,
       adults: 1,
@@ -68,13 +51,29 @@ RSpec.describe "PUT /api/v1/reservations/", type: :request  do
 
   context 'Update Reservation for Payload 1' do
 
+    let(:old_reservation) { reservation }
+
     it 'successfully updated' do
+
       put api_v1_reservations_path params: params
+
       expect(Guest.all.count).to eq(1)
       expect(Reservation.all.count).to eq(1)
-      expect(response).to have_http_status(:ok)
+
+      reservation = Reservation.last
+
+      expect(old_reservation.to_json).not_to eq(reservation.to_json)
+      expect(reservation.start_date.strftime("%Y-%m-%d")).to eq(params[:start_date])
+      expect(reservation.end_date.strftime("%Y-%m-%d")).to eq(params[:end_date])
+      expect(reservation.nights).to eq(params[:nights])
+      expect(reservation.guests).to eq(params[:guests])
+      expect(reservation.adults).to eq(params[:adults])
+      expect(reservation.children).to eq(params[:children])
+      expect(reservation.infants).to eq(params[:infants])
+      expect(reservation.currency).to eq(params[:currency])
+      expect(reservation.payout_price.to_f).to eq(params[:payout_price].to_f)
+      expect(reservation.security_price.to_f).to eq(params[:security_price].to_f)
       expect(response.body).to be_json_as({ save: {message: 'Reservation updated'} })
     end
   end
-
 end
