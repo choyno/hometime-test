@@ -124,7 +124,7 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
 
   context 'Validated Reservation Exist and Email Exist' do
 
-    let!(:email) { "another@email.com"  }
+    let(:email) { "another@email.com"  }
     let(:guest) { create(:guest, email: email) }
 
     before do
