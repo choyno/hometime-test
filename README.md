@@ -1,6 +1,9 @@
 ## Version Ruby
 Ruby 3.1.3
 
+## Version Rails
+Rail 7.0.4
+
 ## running DB
 rails db:setup
 rails db:migrate
