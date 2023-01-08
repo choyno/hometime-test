@@ -158,6 +158,30 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
     end
   end
 
+  context 'Validated Guest Email Format' do
+
+    let!(:email) do
+      "invalid"
+    end
+
+    it 'Invalid Email' do
+      subject
+      expect(Guest.all.count).to eq(0)
+      expect(Reservation.all.count).to eq(0)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.body).to be_json_as({
+        error: {
+          message: {
+            "guest.email": [
+              "Invalid Email Format"
+            ]
+          }
+        }
+      })
+    end
+  end
+
+
   context 'Validated Reservation Validation' do
 
     let!(:params) do
@@ -237,7 +261,7 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
               "can't be blank"
             ],
             "guest.email": [
-              "can't be blank"
+              "can't be blank",
             ]
           }
         }
