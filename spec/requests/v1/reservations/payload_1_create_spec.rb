@@ -2,8 +2,12 @@ require 'rails_helper'
 
 RSpec.describe "POST /api/v1/reservations/", type: :request  do
 
-  let!(:reservation_code) do
+  let(:reservation_code) do
     "YYY12345678"
+  end
+
+  let(:email) do
+    "wayne_woodbridge@bnb.com"
   end
 
   let!(:params) do
@@ -21,7 +25,7 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
         first_name: "Wayne",
         last_name: "Woodbridge",
         phone: "639123456789",
-        email: "wayne_woodbridge@bnb.com"
+        email: email
       },
       currency: "AUD",
       payout_price: "4200.00",
@@ -76,10 +80,8 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
       create(:reservation, guest: guest)
     end
 
-    before { post '/api/v1/reservations', params: params }
-
     it 'validation Email already exist' do
-      subject
+      post '/api/v1/reservations', params: params 
       expect(Guest.all.count).to eq(1)
       expect(Reservation.all.count).to eq(1)
       expect(response).to have_http_status(:unprocessable_entity)
@@ -97,9 +99,11 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
 
   context 'Validated Reservation Exist' do
 
-    let(:reservation) { create(:reservation, reservation_code: reservation_code)  }
+    let!(:email) { "another@email.com"  }
 
-    before { post '/api/v1/reservations', params: params }
+    before do
+      create(:reservation, reservation_code: reservation_code)
+    end
 
     it 'validation Email already exist' do
       subject
@@ -109,9 +113,6 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
       expect(response.body).to be_json_as({
         error: {
           message: {
-            "guest.email": [
-              "Email Already Exist"
-            ],
             reservation_code: [
               "Reservation is Already Exist"
             ],
@@ -121,6 +122,34 @@ RSpec.describe "POST /api/v1/reservations/", type: :request  do
     end
   end
 
+  context 'Validated Reservation Exist and Email Exist' do
+
+    let!(:email) { "another@email.com"  }
+    let(:guest) { create(:guest, email: email) }
+
+    before do
+      create(:reservation, reservation_code: reservation_code, guest: guest)
+    end
+
+    it 'validation Reservation and Email already exist' do
+      subject
+      expect(Guest.all.count).to eq(1)
+      expect(Reservation.all.count).to eq(1)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.body).to be_json_as({
+        error: {
+          message: {
+            reservation_code: [
+              "Reservation is Already Exist"
+            ],
+            "guest.email": [
+              "Email Already Exist"
+            ]
+          }
+        }
+      })
+    end
+  end
 
   context 'Invalid Payload ' do
 
