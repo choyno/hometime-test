@@ -15,16 +15,13 @@ class ReservationService
     reservation_parser[:guest_attributes]
   end
 
-  def init_reservation
-    ReservationService::PayloadParser.new(payload)
-  end
-
   def reservation_parser
-    init_reservation.build.attributes
+    init_parser = ReservationService::PayloadParser.new(payload)
+    init_parser.build.attributes
   end
 
   def reservation_code
-    init_reservation.reservation_code
+    reservation_parser[:reservation_code]
   end
 
   def save_record

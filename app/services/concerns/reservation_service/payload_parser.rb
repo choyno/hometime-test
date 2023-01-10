@@ -22,11 +22,11 @@ class ReservationService::PayloadParser
     when reservation_code.include?("YYY") then PayloadService::PayloadOneParser.new(payload)
     when reservation_code.include?("XXX") then PayloadService::PayloadTwoParser.new(payload)
     else
-      raise_invalid_resercation_code
+      raise_invalid_reservation_code
     end
   end
 
-  def raise_invalid_resercation_code
+  def raise_invalid_reservation_code
     raise ResponseError::InvalidReservationCode, "Reservation Code Not Recognize"
   end
 end
