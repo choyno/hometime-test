@@ -5,4 +5,16 @@ class PayloadService::BaseParser
   def initialize(payload)
     @payload = payload
   end
+
+  def reservation_code
+    attributes[:reservation_code]
+  end
+
+  def reservation_details
+    attributes.except(:guest_attributes)
+  end
+
+  def guest_details
+    attributes[:guest_attributes]
+  end
 end
