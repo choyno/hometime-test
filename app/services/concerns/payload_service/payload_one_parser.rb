@@ -1,4 +1,5 @@
 class PayloadService::PayloadOneParser < PayloadService::BaseParser
+
   def attributes
     {
       guest_attributes: {
@@ -21,5 +22,9 @@ class PayloadService::PayloadOneParser < PayloadService::BaseParser
       security_price: payload[:security_price],
       total_price: payload[:total_price]
     }
+  end
+
+  def current_payload?
+    payload.key?(:reservation_code) && reservation_code.include?("YYY")
   end
 end

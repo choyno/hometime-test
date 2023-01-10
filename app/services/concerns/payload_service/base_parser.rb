@@ -17,4 +17,12 @@ class PayloadService::BaseParser
   def guest_details
     attributes[:guest_attributes]
   end
+
+  def call
+    if current_payload?
+      return self
+    else
+      return nil
+    end
+  end
 end

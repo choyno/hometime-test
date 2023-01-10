@@ -6,21 +6,10 @@ class ReservationService::PayloadParser
     @payload = payload
   end
 
-  def reservation_code
-    if payload.key?(:reservation_code)
-      payload.fetch(:reservation_code)
-    elsif payload.key?(:code)
-      payload.fetch(:code)
-    else
-      nil
-    end
-  end
-
   def build
-    raise_invalid_reservation_code if reservation_code.nil?
     case
-    when reservation_code.include?("YYY") then PayloadService::PayloadOneParser.new(payload)
-    when reservation_code.include?("XXX") then PayloadService::PayloadTwoParser.new(payload)
+    when payload_1 = PayloadService::PayloadOneParser.new(payload).call then payload_1
+    when payload_2 = PayloadService::PayloadTwoParser.new(payload).call then payload_2
     else
       raise_invalid_reservation_code
     end
