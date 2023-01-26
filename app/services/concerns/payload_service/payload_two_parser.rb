@@ -1,4 +1,5 @@
 class PayloadService::PayloadTwoParser < PayloadService::BaseParser
+
   def attributes
     {
       guest_attributes: {
@@ -22,5 +23,9 @@ class PayloadService::PayloadTwoParser < PayloadService::BaseParser
       security_price: payload[:listing_security_price_accurate],
       total_price: payload[:total_paid_amount_accurate]
     }
+  end
+
+  def current_payload?
+    payload.key?(:code) && payload[:code].include?("XXX")
   end
 end
