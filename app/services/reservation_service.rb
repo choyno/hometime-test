@@ -7,32 +7,21 @@ class ReservationService
     @payload = JSON.parse(payload.to_json).deep_symbolize_keys
   end
 
-  def reservation_params
-    reservation_parser.except(:guest_attributes)
-  end
-
-  def guest_params
-    reservation_parser[:guest_attributes]
-  end
-
   def reservation_parser
-    ReservationParser.new(payload).call
-  end
-
-  def reservation_code
-    ReservationParser.new(payload).reservation_code
+    init_parser = ReservationService::PayloadParser.new(payload)
+    init_parser.build
   end
 
   def save_record
-    reservation = Reservation.create(reservation_code: reservation_code)
-    reservation.update(reservation_parser)
+    reservation = Reservation.create(reservation_code: reservation_parser.reservation_code)
+    reservation.update(reservation_parser.attributes)
     return reservation
   end
 
   def update_record
-    reservation = Reservation.find_by(reservation_code: reservation_code)
-    reservation.update(reservation_params)
-    guest = reservation.guest.update(guest_params)
+    reservation = Reservation.find_by(reservation_code: reservation_parser.reservation_code)
+    reservation.update(reservation_parser.reservation_details)
+    guest = reservation.guest.update(reservation_parser.guest_details)
     return reservation
   end
 end
